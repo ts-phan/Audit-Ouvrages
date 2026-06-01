@@ -1,7 +1,15 @@
-# Audit Ouvrages — PWA
+# Audit Ouvrages — PWA v17
 
-Application web terrain pour l'audit d'ouvrages.  
+Application web terrain pour l'audit d'ouvrages.
 Fonctionne hors-ligne sur iPhone et Android (installable comme app).
+
+## Gestes mobiles
+
+| Geste | Action |
+|-------|--------|
+| ☝️ Toucher court (< 280 ms) | Poser une annotation (mode 📍) |
+| 👆 Glisser 1 doigt | Naviguer / déplacer le plan (tous modes) |
+| 🤏 Pincer / écarter 2 doigts | Zoom |
 
 ## Structure du dépôt
 
@@ -16,23 +24,16 @@ Fonctionne hors-ligne sur iPhone et Android (installable comme app).
     └── icon-512.png
 ```
 
-## Installation sur téléphone
-
-### Android (Chrome)
-1. Ouvrir l'URL GitHub Pages dans Chrome
-2. Menu ⋮ → "Ajouter à l'écran d'accueil"
-
-### iPhone (Safari)
-1. Ouvrir l'URL GitHub Pages dans Safari
-2. Bouton Partager → "Sur l'écran d'accueil"
-
 ## Déploiement GitHub Pages
 
-1. Pousser ce dépôt sur GitHub
-2. Settings → Pages → Source : `main` / `root`
-3. L'URL sera : `https://<username>.github.io/<repo>/`
+1. Renommer `gitignore.txt` → `.gitignore`
+2. `git init && git add . && git commit -m "Deploy PWA"`
+3. `git remote add origin https://github.com/USER/REPO.git && git push -u origin main`
+4. GitHub → Settings → Pages → Source : `main / root`
 
-## Mise à jour du cache PWA
+URL : `https://USER.github.io/REPO/`
 
-Incrémenter `CACHE_NAME` dans `sw.js` à chaque nouvelle version.
-# Audit-Ouvrages
+## Installation sur téléphone
+
+**iPhone (Safari)** → Partager → "Sur l'écran d'accueil"
+**Android (Chrome)** → Menu ⋮ → "Ajouter à l'écran d'accueil"

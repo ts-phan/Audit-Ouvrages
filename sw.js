@@ -1,5 +1,5 @@
-// Service Worker — Audit Ouvrages
-const CACHE_NAME = 'audit-ouvrages-v1';
+// Service Worker — Audit Ouvrages v17
+const CACHE_NAME = 'audit-ouvrages-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -11,7 +11,6 @@ const ASSETS = [
   'https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap'
 ];
 
-// Installation : mise en cache de tous les assets
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
@@ -19,7 +18,6 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// Activation : suppression des anciens caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -29,13 +27,10 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch : cache-first pour les assets locaux, network-first pour le reste
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   const isLocal = url.origin === location.origin;
-
   if (isLocal) {
-    // Cache-first pour les fichiers locaux
     event.respondWith(
       caches.match(event.request).then(cached =>
         cached || fetch(event.request).then(response => {
@@ -46,7 +41,6 @@ self.addEventListener('fetch', event => {
       )
     );
   } else {
-    // Network-first pour CDN (fonts, jszip, localforage)
     event.respondWith(
       fetch(event.request).catch(() => caches.match(event.request))
     );
