@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Audit Ouvrages</title>
-
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#4f8ef7">
@@ -13,12 +12,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AuditOuvrages">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-
-<!-- Dépendances CDN -->
+<!-- CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
-
-<!-- Styles -->
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -73,56 +69,62 @@
 
     <!-- LEFT: Plan + registry -->
     <div class="plan-col">
-      <!-- ── START POINT PANEL — always visible, flat ── -->
+      <!-- ── START POINT PANEL — collapsible ── -->
       <div id="sp-panel" style="background:rgba(46,204,127,.04);border-bottom:1px solid rgba(46,204,127,.15);flex-shrink:0;padding:6px 10px">
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <!-- Title + lock indicator -->
+        <!-- Header row — always visible, click to fold/unfold -->
+        <div id="sp-panel-toggle" onclick="toggleSpPanel()">
+          <span class="sp-chevron open" id="sp-chevron">▾</span>
           <span style="font-size:10px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">📍 Départ</span>
-          <span id="sp-status-lbl" style="font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Non défini</span>
+          <span id="sp-status-lbl" style="font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-left:4px">Non défini</span>
           <span id="sp-lock-badge" style="display:none;font-size:9px;font-family:'DM Mono',monospace;color:var(--warn);background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:1px 7px;flex-shrink:0">🔒 Verrouillé</span>
-          <!-- Pointer button -->
-          <button id="pick-start-plan-btn" class="btn bg" style="font-size:10px;padding:3px 9px;border:1px dashed var(--success);color:var(--success);flex-shrink:0" onclick="startPickingOriginFromToolbar()" title="Cliquer sur le plan pour définir le point de départ">
-            <svg width="9" height="9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-            Pointer sur plan
-          </button>
-          <!-- GPS toggle for start -->
-          <div style="display:flex;align-items:center;gap:3px;flex-shrink:0" id="sp-gps-toggle-wrap">
-            <span style="font-size:10px;color:var(--text3)">GPS:</span>
-            <div class="toggle-pill">
-              <button class="tpbtn" id="sgps-on-sp" onclick="setStartGPSMode(true,'sp')">Oui</button>
-              <button class="tpbtn active-off" id="sgps-off-sp" onclick="setStartGPSMode(false,'sp')">Non</button>
-            </div>
-          </div>
-          <!-- GPS capture button (only shown when GPS on) -->
-          <button id="sp-gps-btn" style="display:none;font-size:10px;padding:3px 9px" class="btn bg" onclick="captureStartGPS('sp')">
-            <svg width="9" height="9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            GPS
-          </button>
-          <!-- Distance initiale -->
-          <div style="display:flex;align-items:center;gap:3px;flex-shrink:0" id="sp-dist-wrap">
-            <span style="font-size:10px;color:var(--text3);white-space:nowrap">PK début:</span>
-            <input type="number" id="sp-dist-sp" value="0" min="0" step="0.1" style="width:56px;font-size:10px;padding:3px 6px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'DM Mono',monospace" oninput="onSpDistChange('sp')">
-            <span style="font-size:10px;color:var(--text3)">m</span>
-          </div>
         </div>
-        <!-- GPS coords + address row -->
-        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:4px">
-          <div id="sp-gps-row" style="display:none;flex:1;min-width:180px">
-            <div style="display:flex;gap:6px">
-              <input class="gi" id="sp-lat-sp" readonly placeholder="Lat." style="width:50%">
-              <input class="gi" id="sp-lng-sp" readonly placeholder="Lng." style="width:50%">
+        <!-- Body — collapsible -->
+        <div id="sp-panel-body" class="expanded">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px">
+            <!-- Pointer button -->
+            <button id="pick-start-plan-btn" class="btn bg" style="font-size:10px;padding:3px 9px;border:1px dashed var(--success);color:var(--success);flex-shrink:0" onclick="startPickingOriginFromToolbar()" title="Cliquer sur le plan pour définir le point de départ">
+              <svg width="9" height="9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+              Pointer sur plan
+            </button>
+            <!-- GPS toggle for start -->
+            <div style="display:flex;align-items:center;gap:3px;flex-shrink:0" id="sp-gps-toggle-wrap">
+              <span style="font-size:10px;color:var(--text3)">GPS:</span>
+              <div class="toggle-pill">
+                <button class="tpbtn" id="sgps-on-sp" onclick="setStartGPSMode(true,'sp')">Oui</button>
+                <button class="tpbtn active-off" id="sgps-off-sp" onclick="setStartGPSMode(false,'sp')">Non</button>
+              </div>
+            </div>
+            <!-- GPS capture button (only shown when GPS on) -->
+            <button id="sp-gps-btn" style="display:none;font-size:10px;padding:3px 9px" class="btn bg" onclick="captureStartGPS('sp')">
+              <svg width="9" height="9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              GPS
+            </button>
+            <!-- Distance initiale -->
+            <div style="display:flex;align-items:center;gap:3px;flex-shrink:0" id="sp-dist-wrap">
+              <span style="font-size:10px;color:var(--text3);white-space:nowrap">PK début:</span>
+              <input type="number" id="sp-dist-sp" value="0" min="0" step="0.1" style="width:56px;font-size:10px;padding:3px 6px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'DM Mono',monospace" oninput="onSpDistChange('sp')">
+              <span style="font-size:10px;color:var(--text3)">m</span>
             </div>
           </div>
-          <!-- Address toggle for start point -->
-          <div style="display:flex;align-items:center;gap:3px;flex-shrink:0" id="sp-addr-toggle-wrap">
-            <span style="font-size:10px;color:var(--text3)">Adresse:</span>
-            <div class="toggle-pill">
-              <button class="tpbtn" id="sp-addr-on" onclick="setStartAddressMode(true)">Oui</button>
-              <button class="tpbtn active-off" id="sp-addr-off" onclick="setStartAddressMode(false)">Non</button>
+          <!-- GPS coords + address row -->
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:4px">
+            <div id="sp-gps-row" style="display:none;flex:1;min-width:180px">
+              <div style="display:flex;gap:6px">
+                <input class="gi" id="sp-lat-sp" readonly placeholder="Lat." style="width:50%">
+                <input class="gi" id="sp-lng-sp" readonly placeholder="Lng." style="width:50%">
+              </div>
+            </div>
+            <!-- Address toggle for start point -->
+            <div style="display:flex;align-items:center;gap:3px;flex-shrink:0" id="sp-addr-toggle-wrap">
+              <span style="font-size:10px;color:var(--text3)">Adresse:</span>
+              <div class="toggle-pill">
+                <button class="tpbtn" id="sp-addr-on" onclick="setStartAddressMode(true)">Oui</button>
+                <button class="tpbtn active-off" id="sp-addr-off" onclick="setStartAddressMode(false)">Non</button>
+              </div>
             </div>
           </div>
-        </div>
-        <div id="sp-addr-lbl" style="font-size:9px;color:var(--success);font-family:'DM Mono',monospace;margin-top:2px;display:none;word-break:break-word"></div>
+          <div id="sp-addr-lbl" style="font-size:9px;color:var(--success);font-family:'DM Mono',monospace;margin-top:2px;display:none;word-break:break-word"></div>
+        </div><!-- /sp-panel-body -->
       </div>
 
       <!-- ── PLAN TOOLBAR ── -->
@@ -185,7 +187,7 @@
         </div>
         <div class="reg-scroll">
           <table>
-            <thead><tr><th>ID</th><th>Catégorie</th><th>GPS</th><th>Adresse</th><th>Dist.(m)</th><th>Observations</th><th>Photos</th><th>Traité?</th><th>—</th></tr></thead>
+            <thead><tr><th>ID</th><th>Date+Heure</th><th>Catégorie</th><th>Observations</th><th>Photos</th><th>GPS</th><th>Adresse</th><th>Dist.(m)</th><th>Traité?</th><th>—</th></tr></thead>
             <tbody id="reg-tbody"></tbody>
           </table>
         </div>
@@ -227,11 +229,11 @@
 
 <script src="app.js"></script>
 <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{
       navigator.serviceWorker.register('./sw.js')
-        .then(r => console.log('SW enregistré:', r.scope))
-        .catch(e => console.warn('SW échec:', e));
+        .then(r=>console.log('SW:',r.scope))
+        .catch(e=>console.warn('SW err:',e));
     });
   }
 </script>

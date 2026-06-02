@@ -72,9 +72,13 @@ select option{background:var(--surface2)}
 /* Mobile: plan full + FAB + bottom sheet */
 @media(max-width:899px){
   .proj-wrap{flex-direction:column}
-  .plan-col{flex:1;display:flex;flex-direction:column;min-height:0;max-height:calc(100vh - 120px)}
+  .plan-col{flex:1;display:flex;flex-direction:column;min-height:0}
   .form-col{display:none} /* hidden — shown via bottom sheet */
   #mobile-fab{display:flex!important}
+  /* Registry more compact on mobile */
+  .reg-panel{max-height:28vh!important}
+  /* sp-panel more compact on mobile */
+  #sp-panel{padding:4px 8px!important}
 }
 
 /* ─── TOOLBAR ─── */
@@ -223,6 +227,16 @@ tbody td{padding:7px 9px;vertical-align:middle}
 .exp-box p{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
 .spin{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 12px}
 @keyframes sp{to{transform:rotate(360deg)}}
+
+/* ─── SP-PANEL collapsible ─── */
+#sp-panel-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;width:100%}
+#sp-panel-toggle:hover .sp-chevron{color:var(--success)}
+.sp-chevron{font-size:12px;color:var(--text3);transition:transform .2s;flex-shrink:0;line-height:1}
+.sp-chevron.open{transform:rotate(0deg)}
+.sp-chevron.closed{transform:rotate(-90deg)}
+#sp-panel-body{overflow:hidden;transition:max-height .25s ease,opacity .2s ease}
+#sp-panel-body.collapsed{max-height:0!important;opacity:0;pointer-events:none}
+#sp-panel-body.expanded{max-height:200px;opacity:1}
 
 /* pan step btn - same as zbtn */
 .zbtn{width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text2);cursor:pointer;font-size:13px;line-height:1;transition:all .15s;user-select:none}
