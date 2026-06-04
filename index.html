@@ -189,10 +189,20 @@
       <div class="reg-panel">
         <div class="reg-head">
           <h2>Registre — <span id="mk-cnt" style="color:var(--text3);font-weight:400;font-size:12px">0 défaut(s)</span></h2>
-          <button class="btn bs" style="font-size:12px;padding:7px 13px" onclick="exportZip()">
-            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            ZIP + Excel
-          </button>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:4px">
+              <label style="font-size:10px;color:var(--text3);white-space:nowrap">Plan annoté :</label>
+              <select id="annot-quality" style="font-size:10px;padding:3px 5px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'DM Mono',monospace;cursor:pointer">
+                <option value="1500">Moyen (1500 px)</option>
+                <option value="2500" selected>Élevé (2500 px)</option>
+                <option value="4000">Optimal (4000 px)</option>
+              </select>
+            </div>
+            <button class="btn bs" style="font-size:12px;padding:7px 13px" onclick="exportZip()">
+              <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              ZIP + Excel
+            </button>
+          </div>
         </div>
         <div class="reg-scroll">
           <table>
