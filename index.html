@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Audit Ouvrages</title>
-<!-- PWA -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#4f8ef7">
 <meta name="mobile-web-app-capable" content="yes">
@@ -12,9 +11,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AuditOuvrages">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<!-- CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -129,11 +128,20 @@
 
       <!-- ── PLAN TOOLBAR ── -->
       <div class="phead" style="gap:4px">
-        <label class="fbtn" style="font-size:11px;padding:5px 9px">
+        <label class="fbtn" id="plan-load-btn" style="font-size:11px;padding:5px 9px">
           <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-          Plan<input type="file" id="plan-inp" accept="image/*">
+          Plan / PDF<input type="file" id="plan-inp" accept="image/*,application/pdf">
         </label>
+        <!-- hidden legacy input kept for restore compatibility -->
+        <input type="file" id="pdf-inp" accept="application/pdf" style="display:none">
         <span id="plan-fn" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</span>
+        <!-- PDF page navigation — shown only when PDF loaded -->
+        <div id="pdf-nav">
+          <div class="tsep"></div>
+          <button class="pnbtn" id="pdf-prev" onclick="pdfGotoPage(pdfCurPage-1)" title="Page précédente">◀</button>
+          <span id="pdf-page-lbl">1 / 1</span>
+          <button class="pnbtn" id="pdf-next" onclick="pdfGotoPage(pdfCurPage+1)" title="Page suivante">▶</button>
+        </div>
         <div class="tsep"></div>
         <!-- Mode toggle -->
         <div class="mtog">
@@ -167,6 +175,7 @@
       <div id="plan-vp">
         <div id="sp-pick-banner">📍 Cliquez pour placer le point de départ «D»</div>
         <div id="pan-hint-badge">☝️ Toucher = annoter &nbsp;·&nbsp; 👆 Glisser = naviguer</div>
+        <div id="pdf-page-badge">Page 1 / 1</div>
         <div id="plan-ph">
           <svg width="44" height="44" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
           <p>Importez un plan pour commencer</p>
@@ -187,7 +196,7 @@
         </div>
         <div class="reg-scroll">
           <table>
-            <thead><tr><th>ID</th><th>Date+Heure</th><th>Catégorie</th><th>Observations</th><th>Photos</th><th>GPS</th><th>Adresse</th><th>Dist.(m)</th><th>Traité?</th><th>—</th></tr></thead>
+            <thead><tr><th>ID</th><th>Date+Heure</th><th>Page</th><th>Catégorie</th><th>Observations</th><th>Photos</th><th>GPS</th><th>Adresse</th><th>Dist.(m)</th><th>Traité?</th><th>—</th></tr></thead>
             <tbody id="reg-tbody"></tbody>
           </table>
         </div>
@@ -232,8 +241,7 @@
   if('serviceWorker' in navigator){
     window.addEventListener('load',()=>{
       navigator.serviceWorker.register('./sw.js')
-        .then(r=>console.log('SW:',r.scope))
-        .catch(e=>console.warn('SW err:',e));
+        .then(r=>console.log('SW:',r.scope)).catch(e=>console.warn('SW:',e));
     });
   }
 </script>

@@ -1,3 +1,4 @@
+<style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -228,7 +229,15 @@ tbody td{padding:7px 9px;vertical-align:middle}
 .spin{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 12px}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* ─── SP-PANEL collapsible ─── */
+/* ─── PDF PAGE NAVIGATION ─── */
+#pdf-nav{display:none;align-items:center;gap:6px;flex-shrink:0}
+#pdf-nav .pnbtn{width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text2);cursor:pointer;font-size:13px;transition:all .15s;user-select:none;flex-shrink:0}
+#pdf-nav .pnbtn:hover{border-color:var(--accent);color:var(--accent)}
+#pdf-nav .pnbtn:disabled{opacity:.35;cursor:default;pointer-events:none}
+#pdf-page-lbl{font-size:10px;font-family:'DM Mono',monospace;color:var(--text2);white-space:nowrap}
+#pdf-page-badge{display:none;position:absolute;top:8px;right:8px;background:rgba(15,17,23,.82);border:1px solid var(--border2);border-radius:14px;padding:3px 10px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text2);pointer-events:none;z-index:40;backdrop-filter:blur(4px)}
+/* markers on current PDF page shown, others hidden via js */
+.mpin-offpage{opacity:0;pointer-events:none}
 #sp-panel-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;width:100%}
 #sp-panel-toggle:hover .sp-chevron{color:var(--success)}
 .sp-chevron{font-size:12px;color:var(--text3);transition:transform .2s;flex-shrink:0;line-height:1}
