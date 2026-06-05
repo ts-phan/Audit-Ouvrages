@@ -1,4 +1,4 @@
-const CACHE='audit-ouvrages-v9';
+const CACHE='audit-ouvrages-v11';
 const ASSETS=['./', './index.html','./style.css','./app.js','./manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js',
