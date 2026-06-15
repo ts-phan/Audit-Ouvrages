@@ -14,8 +14,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -38,7 +36,7 @@
 <div id="home-view" class="view active">
   <div class="hcards">
     <div class="hcard">
-      <h2><svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Nouveau projet</h2>
+      <h2><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Nouveau projet</h2>
       <form onsubmit="event.preventDefault();createProject()">
         <div class="irow">
           <input type="text" id="np-name" placeholder="Nom du projet (ex: PN 124)" required autocomplete="off">
@@ -47,14 +45,13 @@
       </form>
     </div>
     <div class="hcard">
-      <h2><svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>Restaurer depuis ZIP</h2>
-      <div class="irow" style="align-items:center">
-        <label class="fbtn" style="flex:1;justify-content:center;font-size:11px;padding:5px 8px">
-          <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-          Choisir un fichier ZIP…<input type="file" id="restore-inp" accept=".zip">
-        </label>
-      </div>
-      <div id="restore-status" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:5px;min-height:12px"></div>
+      <h2><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>Restaurer depuis ZIP</h2>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:9px">Importe un projet exporté <code style="font-family:'DM Mono',monospace;color:var(--accent)">Audit_*.zip</code></div>
+      <label class="fbtn" style="width:100%;justify-content:center">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Choisir un fichier ZIP…<input type="file" id="restore-inp" accept=".zip">
+      </label>
+      <div id="restore-status" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:7px;min-height:14px"></div>
     </div>
   </div>
   <div class="psec">
@@ -129,60 +126,49 @@
         </div><!-- /sp-panel-body -->
       </div>
 
-      <!-- ── PLAN TOOLBAR — ligne unique compacte ── -->
-      <div class="phead" style="gap:3px;flex-wrap:nowrap;overflow-x:auto;padding:4px 8px">
-        <!-- Plan/PDF upload -->
-        <label id="btn-plan-mode" class="fbtn" style="font-size:11px;padding:4px 8px;border:none;border-radius:5px;background:var(--accent);color:#fff;cursor:pointer;margin:0;flex-shrink:0" title="Charger un plan ou PDF">
-          <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-          Plan/PDF<input type="file" id="plan-inp" accept="image/*,application/pdf">
+      <!-- ── PLAN TOOLBAR ── -->
+      <div class="phead" style="gap:4px">
+        <label class="fbtn" id="plan-load-btn" style="font-size:11px;padding:5px 9px">
+          <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          Plan / PDF<input type="file" id="plan-inp" accept="image/*,application/pdf">
         </label>
-        <!-- Carte OSM -->
-        <button id="btn-map" class="fbtn" style="font-size:11px;padding:4px 7px;border:none;border-radius:5px;background:transparent;color:var(--text3);cursor:pointer;margin:0;flex-shrink:0" onclick="toggleMapMode()" title="Carte OpenStreetMap">🗺️</button>
-        <!-- hidden legacy -->
+        <!-- hidden legacy input kept for restore compatibility -->
         <input type="file" id="pdf-inp" accept="application/pdf" style="display:none">
-        <!-- Nom fichier (tronqué) -->
-        <span id="plan-fn" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:1">—</span>
-        <!-- PDF nav -->
-        <div id="pdf-nav" style="flex-shrink:0">
+        <span id="plan-fn" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</span>
+        <!-- PDF page navigation — shown only when PDF loaded -->
+        <div id="pdf-nav">
           <div class="tsep"></div>
-          <button class="pnbtn" id="pdf-prev" onclick="pdfGotoPage(pdfCurPage-1)">◀</button>
-          <span id="pdf-page-lbl" style="font-size:10px;white-space:nowrap">1/1</span>
-          <button class="pnbtn" id="pdf-next" onclick="pdfGotoPage(pdfCurPage+1)">▶</button>
+          <button class="pnbtn" id="pdf-prev" onclick="pdfGotoPage(pdfCurPage-1)" title="Page précédente">◀</button>
+          <span id="pdf-page-lbl">1 / 1</span>
+          <button class="pnbtn" id="pdf-next" onclick="pdfGotoPage(pdfCurPage+1)" title="Page suivante">▶</button>
         </div>
-        <!-- Export carte OSM -->
-        <div id="map-export-btn-wrap" style="display:none;flex-shrink:0">
-          <div class="tsep"></div>
-          <button class="fbtn" style="font-size:11px;padding:4px 7px;background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.3);color:#22c55e" onclick="downloadOsmMap()">📥</button>
-        </div>
-        <div class="tsep" style="flex-shrink:0"></div>
-        <!-- Annoter / Pan -->
-        <div class="mtog" style="flex-shrink:0">
+        <div class="tsep"></div>
+        <!-- Mode toggle -->
+        <div class="mtog">
           <button id="btn-an" class="mbtn an active" onclick="setMode('annotate')" title="Annoter">📍</button>
           <button id="btn-pn" class="mbtn pn" onclick="setMode('pan')" title="Déplacer">✋</button>
         </div>
-        <div class="tsep" style="flex-shrink:0"></div>
-        <!-- Taille annotation — icône seule, slider dans popover -->
-        <div class="asize" style="flex-shrink:0">
+        <div class="tsep"></div>
+        <!-- Annotation size -->
+        <div class="asize">
           <label style="font-size:10px">📌</label>
-          <input type="range" id="ann-sz" min="10" max="100" value="22" step="2" style="width:52px" oninput="updateAnnotSize(this.value)">
-          <span id="ann-sz-lbl" style="font-size:10px;min-width:18px">22</span>
+          <input type="range" id="ann-sz" min="10" max="100" value="22" step="2" oninput="updateAnnotSize(this.value)">
+          <span id="ann-sz-lbl">22</span>
         </div>
-        <div class="tsep" style="flex-shrink:0"></div>
-        <!-- Zoom -->
-        <div class="zctrls" style="flex-shrink:0">
+        <div class="tsep"></div>
+        <!-- Pan arrows + zoom -->
+        <div style="display:flex;align-items:center;gap:2px;flex-shrink:0">
+          <div class="zbtn" onclick="panStep(0,-60)" title="Haut">↑</div>
+          <div class="zbtn" onclick="panStep(0,60)" title="Bas">↓</div>
+          <div class="zbtn" onclick="panStep(60,0)" title="Droite">→</div>
+          <div class="zbtn" onclick="panStep(-60,0)" title="Gauche">←</div>
+        </div>
+        <div class="tsep"></div>
+        <div class="zctrls">
           <div class="zbtn" onclick="zoomBy(-.2)">−</div>
-          <span id="zlbl" style="font-size:10px;min-width:30px;text-align:center">100%</span>
+          <span id="zlbl">100%</span>
           <div class="zbtn" onclick="zoomBy(.2)">+</div>
           <div class="zbtn" onclick="resetZoom()" style="font-size:10px">⌂</div>
-        </div>
-        <!-- Pan arrows — bouton toggle -->
-        <div class="tsep" style="flex-shrink:0"></div>
-        <button class="zbtn" onclick="togglePanArrows(this)" id="pan-arrows-tog" title="Flèches de déplacement" style="font-size:10px;width:auto;padding:0 5px">↕↔</button>
-        <div id="pan-arrows-row" style="display:none;gap:2px;flex-shrink:0">
-          <div class="zbtn" onclick="panStep(0,-60)">↑</div>
-          <div class="zbtn" onclick="panStep(0,60)">↓</div>
-          <div class="zbtn" onclick="panStep(60,0)">→</div>
-          <div class="zbtn" onclick="panStep(-60,0)">←</div>
         </div>
       </div>
       <!-- viewport -->
@@ -190,8 +176,6 @@
         <div id="sp-pick-banner">📍 Cliquez pour placer le point de départ «D»</div>
         <div id="pan-hint-badge">☝️ Toucher = annoter &nbsp;·&nbsp; 👆 Glisser = naviguer</div>
         <div id="pdf-page-badge">Page 1 / 1</div>
-        <div id="map-cv"></div>
-        <div id="lf-gps-badge" class="lf-gps-badge">📡 Position GPS utilisée</div>
         <div id="plan-ph">
           <svg width="44" height="44" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
           <p>Importez un plan pour commencer</p>
@@ -205,30 +189,24 @@
       <div class="reg-panel">
         <div class="reg-head">
           <h2>Registre — <span id="mk-cnt" style="color:var(--text3);font-weight:400;font-size:12px">0 défaut(s)</span></h2>
-          <button class="reg-exports-toggle" id="reg-exports-tog" onclick="toggleRegExports()">Export ▾</button>
-        </div>
-        <!-- Exports — pliable -->
-        <div class="reg-exports-body hidden" id="reg-exports-body">
-          <div style="display:flex;align-items:center;gap:4px">
-            <label style="font-size:10px;color:var(--text3);white-space:nowrap">Qualité :</label>
-            <select id="annot-quality" style="font-size:10px;padding:3px 5px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'DM Mono',monospace;cursor:pointer">
-              <option value="1600">Moyen (1600 px)</option>
-              <option value="3200" selected>Élevé (3200 px)</option>
-              <option value="4800">Optimal (4800 px)</option>
-            </select>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:4px">
+              <label style="font-size:10px;color:var(--text3);white-space:nowrap">Plan annoté :</label>
+              <select id="annot-quality" style="font-size:10px;padding:3px 5px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'DM Mono',monospace;cursor:pointer">
+                <option value="1500">Moyen (1500 px)</option>
+                <option value="2500" selected>Élevé (2500 px)</option>
+                <option value="4000">Optimal (4000 px)</option>
+              </select>
+            </div>
+            <button class="btn bs" style="font-size:12px;padding:7px 13px" onclick="exportZip()">
+              <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              ZIP + Excel
+            </button>
+            <button class="btn" style="font-size:12px;padding:7px 13px;background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.35);color:#a855f7" onclick="exportBcf()" title="Exporter au format BCF 2.1 (BIM Collaboration Format)">
+              <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 10V7"/></svg>
+              BCF
+            </button>
           </div>
-          <button class="btn bs" style="font-size:11px;padding:5px 11px" onclick="exportZip()">
-            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            ZIP + Excel
-          </button>
-          <button class="btn" style="font-size:11px;padding:5px 11px;background:rgba(79,142,247,.12);border-color:rgba(79,142,247,.35);color:var(--accent)" onclick="downloadAnnotatedPlan()">
-            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            Plan annoté
-          </button>
-          <button class="btn" style="font-size:11px;padding:5px 11px;background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.35);color:#a855f7" onclick="exportBcf()">
-            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 10V7"/></svg>
-            BCF
-          </button>
         </div>
         <div class="reg-scroll">
           <table>
@@ -271,90 +249,6 @@
 
 <!-- Export overlay -->
 <div id="exp-ov"><div class="exp-box"><div class="spin"></div><h3>Export en cours…</h3><p id="exp-st">Préparation</p></div></div>
-
-<!-- Modal déplacement structure -->
-<div id="move-modal">
-  <div class="move-box">
-    <h3>
-      <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-      Déplacer vers…
-    </h3>
-    <div style="font-size:11px;color:var(--text3)" id="move-sub-label">Structure : <strong id="move-sub-name"></strong></div>
-    <div class="move-list" id="move-list"></div>
-    <button class="btn bg" style="width:100%" onclick="closeMoveModal()">Annuler</button>
-  </div>
-</div>
-
-<!-- Modal édition défaut -->
-<div id="edit-modal">
-  <div class="edit-box">
-    <div class="edit-box-head">
-      <h3>✏️ Modifier le défaut <span id="edit-defect-id" style="color:var(--accent)"></span></h3>
-      <button class="mob-close" onclick="closeEditModal()">✕</button>
-    </div>
-    <div class="edit-box-body">
-      <div class="edit-field">
-        <label>Catégorie</label>
-        <select id="edit-cat">
-          <option>Défaut</option><option>Fissure</option><option>Déformation</option>
-          <option>Corrosion</option><option>Végétation</option><option>Drainage</option>
-          <option>Revêtement</option><option>Joints</option><option>Autre</option>
-        </select>
-      </div>
-      <div class="edit-field">
-        <label>Observations</label>
-        <textarea id="edit-obs" rows="3"></textarea>
-      </div>
-      <div class="edit-field">
-        <label>GPS Lat</label>
-        <input type="text" id="edit-lat" placeholder="—" oninput="onEditGpsChange()">
-      </div>
-      <div class="edit-field">
-        <label>GPS Lng</label>
-        <input type="text" id="edit-lng" placeholder="—" oninput="onEditGpsChange()">
-      </div>
-      <div class="edit-field">
-        <label>Adresse</label>
-        <input type="text" id="edit-addr" placeholder="—">
-      </div>
-      <div class="edit-field">
-        <label>Photos <span id="edit-photo-count" style="color:var(--text3);font-weight:400"></span></label>
-        <div class="edit-photo-grid" id="edit-photo-grid"></div>
-        <label class="edit-add-photo" id="edit-add-photo-btn" title="Ajouter une photo">
-          +
-          <input type="file" accept="image/*" capture="environment" style="display:none" id="edit-photo-inp" onchange="onEditPhotoAdd(this)">
-        </label>
-      </div>
-    </div>
-    <div class="edit-box-actions">
-      <button class="btn bg" onclick="closeEditModal()">Annuler</button>
-      <button class="btn bp" onclick="saveEditDefect()">💾 Enregistrer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal choix parent pour restauration ZIP -->
-<div id="restore-parent-modal">
-  <div class="restore-parent-box">
-    <h3>📦 Restaurer ce ZIP…</h3>
-    <div class="restore-parent-info" id="restore-parent-filename"></div>
-    <div style="font-size:12px;color:var(--text2)">Choisir la destination :</div>
-    <div class="restore-parent-list" id="restore-parent-list"></div>
-    <button class="btn bg" style="width:100%;margin-top:4px" onclick="closeRestoreParentModal()">Annuler</button>
-  </div>
-</div>
-
-<!-- Modal renommage (remplace prompt() natif) -->
-<div id="rename-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:900;align-items:center;justify-content:center;padding:20px">
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px">
-    <div style="font-size:13px;font-weight:700" id="rename-modal-title">Renommer</div>
-    <input type="text" id="rename-modal-inp" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:8px 11px;font-size:14px;color:var(--text1);font-family:inherit;width:100%;box-sizing:border-box" autocomplete="off">
-    <div style="display:flex;gap:8px">
-      <button class="btn bg" style="flex:1" onclick="closeRenameModal()">Annuler</button>
-      <button class="btn bp" style="flex:1" onclick="confirmRename()">✓ Renommer</button>
-    </div>
-  </div>
-</div>
 
 <script src="app.js"></script>
 <script>
