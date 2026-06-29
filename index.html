@@ -205,8 +205,13 @@
       <div class="reg-panel">
         <div class="reg-head">
           <h2>Registre — <span id="mk-cnt" style="color:var(--text3);font-weight:400;font-size:12px">0 défaut(s)</span></h2>
-          <button class="reg-exports-toggle" id="reg-exports-tog" onclick="toggleRegExports()">Export ▾</button>
+          <div style="display:flex;align-items:center;gap:6px">
+            <button class="reg-exports-toggle" id="reg-legend-tog" onclick="toggleLegend()">Légende ▾</button>
+            <button class="reg-exports-toggle" id="reg-exports-tog" onclick="toggleRegExports()">Export ▾</button>
+          </div>
         </div>
+        <!-- Légende couleurs — pliable -->
+        <div class="reg-exports-body hidden" id="reg-legend-body" style="flex-wrap:wrap;gap:6px 12px;padding:8px 10px"></div>
         <!-- Exports — pliable -->
         <div class="reg-exports-body hidden" id="reg-exports-body">
           <div style="display:flex;align-items:center;gap:4px">
@@ -228,6 +233,10 @@
           <button class="btn" style="font-size:11px;padding:5px 11px;background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.35);color:#a855f7" onclick="exportBcf()">
             <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 10V7"/></svg>
             BCF
+          </button>
+          <button class="btn" style="font-size:11px;padding:5px 11px;background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.35);color:#f59e0b" onclick="exportRescue()" title="Export léger sans photos ni plan annoté — ne crashe jamais">
+            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            Secours
           </button>
         </div>
         <div class="reg-scroll">
@@ -296,9 +305,6 @@
       <div class="edit-field">
         <label>Catégorie</label>
         <select id="edit-cat">
-          <option>Défaut</option><option>Fissure</option><option>Déformation</option>
-          <option>Corrosion</option><option>Végétation</option><option>Drainage</option>
-          <option>Revêtement</option><option>Joints</option><option>Autre</option>
         </select>
       </div>
       <div class="edit-field">
@@ -320,10 +326,15 @@
       <div class="edit-field">
         <label>Photos <span id="edit-photo-count" style="color:var(--text3);font-weight:400"></span></label>
         <div class="edit-photo-grid" id="edit-photo-grid"></div>
-        <label class="edit-add-photo" id="edit-add-photo-btn" title="Ajouter une photo">
-          +
-          <input type="file" accept="image/*" capture="environment" style="display:none" id="edit-photo-inp" onchange="onEditPhotoAdd(this)">
-        </label>
+        <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+          <label class="edit-add-photo" id="edit-add-photo-btn" title="Ajouter une photo">
+            +
+            <input type="file" accept="image/*" capture="environment" style="display:none" id="edit-photo-inp" onchange="onEditPhotoAdd(this)">
+          </label>
+          <button class="btn bg" id="zoom-capture-btn" style="font-size:11px;padding:6px 12px" onclick="captureZoomSnapshot()" title="Capture un agrandissement de la zone autour du défaut sur le plan/PDF">
+            🔍 Capturer zoom localisé
+          </button>
+        </div>
       </div>
     </div>
     <div class="edit-box-actions">
